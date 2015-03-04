@@ -1,2 +1,2 @@
-call mvn -e clean install
+call mvn -e deploy
 pause
