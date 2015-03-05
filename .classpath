@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
   <classpathentry kind="src" path="src/main/java" including="**/*.java"/>
-  <classpathentry kind="src" path="src/main/resources" excluding="**/*.java"/>
   <classpathentry kind="output" path="target/classes"/>
   <classpathentry kind="var" path="M2_REPO/javax/inject/javax.inject/1/javax.inject-1.jar" sourcepath="M2_REPO/javax/inject/javax.inject/1/javax.inject-1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar" sourcepath="M2_REPO/javax/servlet/servlet-api/2.5/servlet-api-2.5-sources.jar"/>
@@ -21,5 +20,5 @@
   <classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-log4j12/1.6.1/slf4j-log4j12-1.6.1.jar" sourcepath="M2_REPO/org/slf4j/slf4j-log4j12/1.6.1/slf4j-log4j12-1.6.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/tapestry/tapestry-json/5.3.8/tapestry-json-5.3.8.jar" sourcepath="M2_REPO/org/apache/tapestry/tapestry-json/5.3.8/tapestry-json-5.3.8-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar" sourcepath="M2_REPO/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/gagauz/common/tools/1.0/tools-1.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/gagauz/common/utils/1.0-SNAPSHOT/utils-1.0-SNAPSHOT.jar"/>
 </classpath>

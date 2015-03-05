@@ -1,7 +1,5 @@
 package com.gagauz.tapestry.security;
 
-import com.gagauz.tapestry.security.api.Role;
-
 import java.lang.annotation.*;
 
 @Target({ElementType.METHOD, ElementType.FIELD, ElementType.TYPE})
@@ -9,5 +7,5 @@ import java.lang.annotation.*;
 @Inherited
 @Documented
 public @interface Secured {
-    Role[] value() default {};
+    String[] value() default {};
 }

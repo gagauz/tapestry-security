@@ -1,20 +1,18 @@
 package com.gagauz.tapestry.security;
 
-import com.gagauz.tapestry.security.api.Role;
-
 public class SecurityException extends RuntimeException {
 
-    private Role[] needRoles;
+    private String[] needRoles;
 
-    public SecurityException(Role[] needRoles) {
+    public SecurityException(String[] needRoles) {
         this.needRoles = needRoles;
     }
 
-    public Role[] getNeedRoles() {
+    public String[] getNeedRoles() {
         return needRoles;
     }
 
-    public void setNeedRoles(Role[] needRoles) {
+    public void setNeedRoles(String[] needRoles) {
         this.needRoles = needRoles;
     }
 

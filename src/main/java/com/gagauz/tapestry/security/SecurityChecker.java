@@ -1,6 +1,5 @@
 package com.gagauz.tapestry.security;
 
-import com.gagauz.tapestry.security.api.Role;
 import com.gagauz.tapestry.security.api.SecurityUser;
 
 import javax.inject.Inject;
@@ -9,20 +8,14 @@ public class SecurityChecker {
     @Inject
     private SecurityUserCreator sessionUserCreator;
 
-    public boolean isCurrentUserHasRoles(Role[] needRoles) {
+    public boolean isCurrentUserHasRoles(String[] needRoles) {
 
         SecurityUser user = sessionUserCreator.getUserFromContext();
         if (null != user) {
             if (null == needRoles || 0 == needRoles.length) {
                 return true;
             }
-            for (final Role userRole : user.getRoles()) {
-                for (Role pageRole : needRoles) {
-                    if (userRole == pageRole) {
-                        return true;
-                    }
-                }
-            }
+            return user.checkRoles(needRoles);
         }
         return false;
     }

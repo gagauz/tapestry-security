@@ -1,5 +1,5 @@
 package com.gagauz.tapestry.security.api;
 
 public interface SecurityUser {
-    Role[] getRoles();
+    boolean checkRoles(String[] needRoles);
 }

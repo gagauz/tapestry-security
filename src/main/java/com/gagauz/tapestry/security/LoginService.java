@@ -1,10 +1,11 @@
 package com.gagauz.tapestry.security;
 
 import com.gagauz.tapestry.security.api.Credentials;
-import com.gagauz.tapestry.security.api.LoginHandler;
+import com.gagauz.tapestry.security.api.LoginResultHandler;
 import com.gagauz.tapestry.security.api.SecurityUser;
 import com.gagauz.tapestry.security.api.SecurityUserProvider;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.services.ApplicationStateManager;
 
 import java.util.List;
 
@@ -14,25 +15,29 @@ public class LoginService {
     private SecurityUserProvider sessionUserService;
 
     @Inject
-    private SecurityUserCreator sessionUserCreator;
+    private ApplicationStateManager applicationStateManager;
 
     @Inject
-    private List<LoginHandler> handlers;
+    private List<LoginResultHandler> handlers;
 
     public SecurityUser authenticate(Credentials credentials) {
         SecurityUser newUser = sessionUserService.loadByCredentials(credentials);
 
-        LoginResult result = LoginResult.FAIL;
+        LoginResult result = null;
 
         if (null != newUser) {
-            SecurityUser oldUser = sessionUserCreator.createUser(newUser);
-            result = LoginResult.SUCCESS;
-            for (LoginHandler handler : handlers) {
-                handler.handle(oldUser, newUser, result);
-            }
-            return newUser;
+            SecurityUser oldUser = applicationStateManager.getIfExists(SecurityUser.class);
+            applicationStateManager.set(SecurityUser.class, newUser);
+            result = new LoginSuccessResult(newUser);
+            result.setOldUser(oldUser);
+        } else {
+            result = new LoginFailedResult();
         }
 
-        return null;
+        for (LoginResultHandler handler : handlers) {
+            handler.handle(result);
+        }
+
+        return newUser;
     }
 }

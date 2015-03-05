@@ -1,17 +1,15 @@
 package com.gagauz.tapestry.security.impl;
 
-import com.gagauz.common.tools.C;
 import com.gagauz.common.tools.Function;
 import com.gagauz.tapestry.security.AbstractCommonHandlerWrapper;
 import com.gagauz.tapestry.security.LoginResult;
-import com.gagauz.tapestry.security.SecurityEncryptor;
+import com.gagauz.tapestry.security.SecurityConstants;
 import com.gagauz.tapestry.security.SecurityException;
-import com.gagauz.tapestry.security.api.LoginHandler;
+import com.gagauz.tapestry.security.api.LoginResultHandler;
 import com.gagauz.tapestry.security.api.SecurityExceptionHandler;
-import com.gagauz.tapestry.security.api.SecurityUser;
 import org.apache.tapestry5.Link;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.apache.tapestry5.ioc.annotations.Value;
+import org.apache.tapestry5.ioc.annotations.Symbol;
 import org.apache.tapestry5.services.ComponentEventLinkEncoder;
 import org.apache.tapestry5.services.Request;
 
@@ -20,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
 
-public class RedirectLoginHandler implements LoginHandler, SecurityExceptionHandler {
+public class RedirectLoginHandler implements LoginResultHandler, SecurityExceptionHandler {
 
     public static final Function<Enum<?>, String> ENUM_TO_STRING = new Function<Enum<?>, String>() {
         @Override
@@ -29,15 +27,12 @@ public class RedirectLoginHandler implements LoginHandler, SecurityExceptionHand
         }
     };
 
-    public static final String SECURITY_REDIRECT_URL = "security-redirect-url";
-    public static final String SECURITY_REDIRECT_PARAMETER = "security-redirect-parameter";
-
     @Inject
-    @Value("${" + SECURITY_REDIRECT_URL + "}")
+    @Symbol(SecurityConstants.AUTH_REDIRECT_URL)
     private String loginFormUrl;
 
     @Inject
-    @Value("${" + SECURITY_REDIRECT_PARAMETER + "}")
+    @Symbol(SecurityConstants.REDIRECT_PARAM)
     private String redirectParam;
 
     @Inject
@@ -48,9 +43,6 @@ public class RedirectLoginHandler implements LoginHandler, SecurityExceptionHand
 
     @Inject
     private ComponentEventLinkEncoder componentEventLinkEncoder;
-
-    @Inject
-    private SecurityEncryptor encryptor;
 
     /**
      * On {@link SecurityException} redirects to login form page provided by loginFormUrl
@@ -65,8 +57,7 @@ public class RedirectLoginHandler implements LoginHandler, SecurityExceptionHand
                 link = componentEventLinkEncoder.createPageRenderLink(handlerWrapper.getPageRenderRequestParameters());
             }
 
-            response.sendRedirect(loginFormUrl + '?' + redirectParam + '=' + URLEncoder.encode(link.toRedirectURI()) + "&n="
-                    + encryptor.encryptArray(C.transform(cause.getNeedRoles(), ENUM_TO_STRING)));
+            response.sendRedirect(loginFormUrl + '?' + redirectParam + '=' + URLEncoder.encode(link.toRedirectURI()));
             response.flushBuffer();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -74,12 +65,10 @@ public class RedirectLoginHandler implements LoginHandler, SecurityExceptionHand
     }
 
     @Override
-    public void handle(SecurityUser oldUser, SecurityUser newUser, LoginResult result) {
-        if (LoginResult.SUCCESS == result && null != request.getParameter(redirectParam)) {
+    public void handle(LoginResult result) {
+        if (result.isSuccess() && null != request.getParameter(redirectParam)) {
             try {
-                String s = request.getParameter(redirectParam);
                 response.sendRedirect(request.getParameter(redirectParam));
-                //response.flushBuffer();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

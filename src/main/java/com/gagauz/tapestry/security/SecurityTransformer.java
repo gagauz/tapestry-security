@@ -1,6 +1,5 @@
 package com.gagauz.tapestry.security;
 
-import com.gagauz.tapestry.security.api.Role;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.model.MutableComponentModel;
@@ -24,7 +23,7 @@ public class SecurityTransformer implements ComponentClassTransformWorker2 {
     @Inject
     private SecurityChecker securityChecker;
 
-    private MethodAdvice getSecurityAdvice(final PlasticMethod securedMethod, final Role[] needRoles) {
+    private MethodAdvice getSecurityAdvice(final PlasticMethod securedMethod, final String[] needRoles) {
         return new MethodAdvice() {
 
             @Override
