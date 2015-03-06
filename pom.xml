@@ -25,12 +25,6 @@
 			<version>${servlet-api-release-version}</version>
 			<scope>provided</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>com.gagauz.common</groupId>
-			<artifactId>utils</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 
 	<distributionManagement>
