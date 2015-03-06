@@ -1,4 +1,4 @@
-package com.gagauz.tapestry.security;
+package org.gagauz.tapestry.security;
 
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.ioc.annotations.Inject;
@@ -17,12 +17,26 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SecurityTransformer.
+ */
 public class SecurityTransformer implements ComponentClassTransformWorker2 {
+    
+    /** The logger. */
     protected static Logger logger = LoggerFactory.getLogger(SecurityTransformer.class);
 
+    /** The security checker. */
     @Inject
     private SecurityChecker securityChecker;
 
+    /**
+     * Gets the security advice.
+     *
+     * @param securedMethod the secured method
+     * @param needRoles the need roles
+     * @return the security advice
+     */
     private MethodAdvice getSecurityAdvice(final PlasticMethod securedMethod, final String[] needRoles) {
         return new MethodAdvice() {
 
@@ -35,6 +49,9 @@ public class SecurityTransformer implements ComponentClassTransformWorker2 {
         };
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.tapestry5.services.transform.ComponentClassTransformWorker2#transform(org.apache.tapestry5.plastic.PlasticClass, org.apache.tapestry5.services.transform.TransformationSupport, org.apache.tapestry5.model.MutableComponentModel)
+     */
     @Override
     public void transform(PlasticClass plasticClass, TransformationSupport support, MutableComponentModel model) {
         final Secured annotation = plasticClass.getAnnotation(Secured.class);

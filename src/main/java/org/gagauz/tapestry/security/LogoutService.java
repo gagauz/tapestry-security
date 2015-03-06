@@ -1,7 +1,8 @@
-package com.gagauz.tapestry.security;
+package org.gagauz.tapestry.security;
 
-import com.gagauz.tapestry.security.api.LogoutHandler;
-import com.gagauz.tapestry.security.api.SecurityUser;
+import org.gagauz.tapestry.security.api.LogoutHandler;
+import org.gagauz.tapestry.security.api.SecurityUser;
+
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.ApplicationStateManager;
 import org.apache.tapestry5.services.Request;
@@ -11,19 +12,30 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LogoutService.
+ */
 public class LogoutService {
 
+    /** The Constant log. */
     private static final Logger log = LoggerFactory.getLogger(LogoutService.class);
 
+    /** The request. */
     @Inject
     private Request request;
 
+    /** The application state manager. */
     @Inject
     private ApplicationStateManager applicationStateManager;
 
+    /** The handlers. */
     @Inject
     private List<LogoutHandler> handlers;
 
+    /**
+     * Logout.
+     */
     public void logout() {
 
         SecurityUser user = applicationStateManager.getIfExists(SecurityUser.class);

@@ -1,2 +1,2 @@
-call mvn -e deploy
+call mvn -e -DperformRelease=true compile deploy
 pause

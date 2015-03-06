@@ -1,16 +1,25 @@
-package com.gagauz.tapestry.security;
+package org.gagauz.tapestry.security;
 
-import com.gagauz.tapestry.security.api.SecurityExceptionHandler;
+import org.gagauz.tapestry.security.api.SecurityExceptionHandler;
+
 import org.apache.tapestry5.ioc.annotations.Inject;
 
 import java.io.IOException;
 import java.util.List;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SecurityExceptionInterceptorFilter.
+ */
 public class SecurityExceptionInterceptorFilter extends AbstractCommonRequestFilter {
 
+    /** The handlers. */
     @Inject
     private List<SecurityExceptionHandler> handlers;
 
+    /* (non-Javadoc)
+     * @see org.gagauz.tapestry.security.AbstractCommonRequestFilter#handleInternal(org.gagauz.tapestry.security.AbstractCommonHandlerWrapper)
+     */
     @Override
     public void handleInternal(AbstractCommonHandlerWrapper handlerWrapper) throws IOException {
         try {
