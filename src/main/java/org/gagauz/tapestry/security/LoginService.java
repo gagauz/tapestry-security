@@ -48,7 +48,7 @@ public class LoginService {
         }
 
         for (LoginResultHandler handler : handlers) {
-            handler.handle(result);
+            handler.handle(result, credentials);
         }
 
         return newUser;

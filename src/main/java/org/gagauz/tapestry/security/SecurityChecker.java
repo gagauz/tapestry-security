@@ -1,6 +1,7 @@
 package org.gagauz.tapestry.security;
 
-import org.apache.tapestry5.annotations.SessionState;
+import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.services.ApplicationStateManager;
 import org.gagauz.tapestry.security.api.SecurityUser;
 
 // TODO: Auto-generated Javadoc
@@ -10,8 +11,8 @@ import org.gagauz.tapestry.security.api.SecurityUser;
 public class SecurityChecker {
 
     /** The session user creator. */
-    @SessionState(create = false)
-    private SecurityUser securityUser;
+    @Inject
+    private ApplicationStateManager applicationStateManager;
 
     /**
      * Checks if is current user has roles.
@@ -20,6 +21,7 @@ public class SecurityChecker {
      * @return true, if is current user has roles
      */
     public boolean isCurrentUserHasRoles(String[] needRoles) {
+        SecurityUser securityUser = applicationStateManager.getIfExists(SecurityUser.class);
         if (null != securityUser) {
             if (null == needRoles || 0 == needRoles.length) {
                 return true;

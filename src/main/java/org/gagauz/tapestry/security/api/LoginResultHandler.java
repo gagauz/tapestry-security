@@ -7,11 +7,11 @@ import org.gagauz.tapestry.security.LoginResult;
  * The Interface LoginResultHandler.
  */
 public interface LoginResultHandler {
-    
+
     /**
      * Handle.
      *
      * @param result the result
      */
-    void handle(LoginResult result);
+    void handle(LoginResult result, Credentials credentials);
 }

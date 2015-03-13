@@ -5,14 +5,14 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.ioc.annotations.Symbol;
 import org.apache.tapestry5.services.ComponentEventLinkEncoder;
 import org.apache.tapestry5.services.Request;
+import org.apache.tapestry5.services.Response;
 import org.gagauz.tapestry.security.AbstractCommonHandlerWrapper;
 import org.gagauz.tapestry.security.LoginResult;
 import org.gagauz.tapestry.security.SecurityConstants;
 import org.gagauz.tapestry.security.SecurityException;
+import org.gagauz.tapestry.security.api.Credentials;
 import org.gagauz.tapestry.security.api.LoginResultHandler;
 import org.gagauz.tapestry.security.api.SecurityExceptionHandler;
-
-import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -39,7 +39,7 @@ public class RedirectLoginHandler implements LoginResultHandler, SecurityExcepti
 
     /** The response. */
     @Inject
-    private HttpServletResponse response;
+    private Response response;
 
     /** The component event link encoder. */
     @Inject
@@ -62,7 +62,6 @@ public class RedirectLoginHandler implements LoginResultHandler, SecurityExcepti
             }
 
             response.sendRedirect(loginFormUrl + '?' + redirectParam + '=' + URLEncoder.encode(link.toRedirectURI()));
-            response.flushBuffer();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -72,7 +71,7 @@ public class RedirectLoginHandler implements LoginResultHandler, SecurityExcepti
      * @see org.gagauz.tapestry.security.api.LoginResultHandler#handle(org.gagauz.tapestry.security.LoginResult)
      */
     @Override
-    public void handle(LoginResult result) {
+    public void handle(LoginResult result, Credentials credentials) {
         if (result.isSuccess() && null != request.getParameter(redirectParam)) {
             try {
                 response.sendRedirect(request.getParameter(redirectParam));
