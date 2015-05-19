@@ -1,13 +1,13 @@
 package org.gagauz.tapestry.security.api;
 
 import org.gagauz.tapestry.security.AbstractCommonHandlerWrapper;
-import org.gagauz.tapestry.security.SecurityException;
+import org.gagauz.tapestry.security.AccessDeniedException;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Interface SecurityExceptionHandler.
  */
-public interface SecurityExceptionHandler {
+public interface AccessDeniedExceptionHandler {
 
     /**
      * Handle.
@@ -15,6 +15,6 @@ public interface SecurityExceptionHandler {
      * @param handlerWrapper the handler wrapper
      * @param cause the cause
      */
-    void handle(AbstractCommonHandlerWrapper handlerWrapper, SecurityException cause);
+    void handleException(AbstractCommonHandlerWrapper handlerWrapper, AccessDeniedException cause);
 
 }

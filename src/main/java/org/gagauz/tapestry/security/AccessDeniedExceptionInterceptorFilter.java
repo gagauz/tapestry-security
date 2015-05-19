@@ -1,25 +1,16 @@
 package org.gagauz.tapestry.security;
 
-import org.gagauz.tapestry.security.api.SecurityExceptionHandler;
-
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.gagauz.tapestry.security.api.AccessDeniedExceptionHandler;
 
 import java.io.IOException;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
-/**
- * The Class SecurityExceptionInterceptorFilter.
- */
-public class SecurityExceptionInterceptorFilter extends AbstractCommonRequestFilter {
+public class AccessDeniedExceptionInterceptorFilter extends AbstractCommonRequestFilter {
 
-    /** The handlers. */
     @Inject
-    private List<SecurityExceptionHandler> handlers;
+    private List<AccessDeniedExceptionHandler> handlers;
 
-    /* (non-Javadoc)
-     * @see org.gagauz.tapestry.security.AbstractCommonRequestFilter#handleInternal(org.gagauz.tapestry.security.AbstractCommonHandlerWrapper)
-     */
     @Override
     public void handleInternal(AbstractCommonHandlerWrapper handlerWrapper) throws IOException {
         try {
@@ -32,9 +23,9 @@ public class SecurityExceptionInterceptorFilter extends AbstractCommonRequestFil
             while (null != cause.getCause()) {
                 cause = cause.getCause();
             }
-            if (cause instanceof SecurityException) {
-                for (SecurityExceptionHandler exceptionHandler : handlers) {
-                    exceptionHandler.handle(handlerWrapper, (SecurityException) cause);
+            if (cause instanceof AccessDeniedException) {
+                for (AccessDeniedExceptionHandler exceptionHandler : handlers) {
+                    exceptionHandler.handleException(handlerWrapper, (AccessDeniedException) cause);
                 }
                 return;
             }

@@ -7,7 +7,7 @@ import org.apache.tapestry5.ioc.annotations.Local;
 import org.apache.tapestry5.services.ComponentEventRequestFilter;
 import org.apache.tapestry5.services.PageRenderRequestFilter;
 import org.apache.tapestry5.services.transform.ComponentClassTransformWorker2;
-import org.gagauz.tapestry.security.impl.RedirectLoginHandler;
+import org.gagauz.tapestry.security.api.AccessChecker;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -15,17 +15,10 @@ import org.gagauz.tapestry.security.impl.RedirectLoginHandler;
  */
 public class SecurityModule {
 
-    /**
-     * Bind.
-     *
-     * @param binder the binder
-     */
     public static void bind(ServiceBinder binder) {
-        binder.bind(SecurityChecker.class).withId("SecurityChecker");
-        binder.bind(SecurityExceptionInterceptorFilter.class).withId("SecurityExceptionRequestFilter");
-        binder.bind(LoginService.class).withId("LoginService");
-        binder.bind(LogoutService.class).withId("LogoutService");
-        binder.bind(RedirectLoginHandler.class).withId("RedirectLoginHandler");
+        binder.bind(AccessChecker.class, DefaultAccessChecker.class);
+        binder.bind(AccessDeniedExceptionInterceptorFilter.class).withId("SecurityExceptionRequestFilter");
+        binder.bind(AuthService.class).withId("AuthService");
     }
 
     /**
@@ -45,7 +38,7 @@ public class SecurityModule {
      * @param filter the filter
      */
     public void contributeComponentEventRequestHandler(OrderedConfiguration<ComponentEventRequestFilter> configuration,
-                                                       @Local SecurityExceptionInterceptorFilter filter) {
+                                                       @Local AccessDeniedExceptionInterceptorFilter filter) {
         configuration.add("SecurityExceptionFilterComponent", filter, "after:*");
     }
 
@@ -56,7 +49,7 @@ public class SecurityModule {
      * @param filter the filter
      */
     public void contributePageRenderRequestHandler(OrderedConfiguration<PageRenderRequestFilter> configuration,
-                                                   @Local SecurityExceptionInterceptorFilter filter) {
+                                                   @Local AccessDeniedExceptionInterceptorFilter filter) {
         configuration.add("SecurityExceptionFilterPage", filter, "after:*");
     }
 }

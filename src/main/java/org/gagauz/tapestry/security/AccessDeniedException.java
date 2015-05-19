@@ -2,9 +2,9 @@ package org.gagauz.tapestry.security;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class SecurityException.
+ * The Class AccessDeniedException.
  */
-public class SecurityException extends RuntimeException {
+public class AccessDeniedException extends RuntimeException {
 
     /** The need roles. */
     private String[] needRoles;
@@ -14,7 +14,7 @@ public class SecurityException extends RuntimeException {
      *
      * @param needRoles the need roles
      */
-    public SecurityException(String[] needRoles) {
+    public AccessDeniedException(String[] needRoles) {
         this.needRoles = needRoles;
     }
 
