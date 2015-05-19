@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.gagauz.tapestry</groupId>
 	<artifactId>tapestry-security</artifactId>
-	<version>2.1-SNAPSHOT</version>
+	<version>3.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Another one Tapestry 5 Security Library</name>
 	<dependencies>
@@ -31,7 +31,7 @@
 		<repository>
 			<id>sourceforge</id>
 			<name>SourceForge</name>
-			<url>scpexe://xl0e,tapestrysecurity@shell.sourceforge.net:/home/project-web/tapestrysecurity/htdocs/maven_repo</url>
+			<url>scp://xl0e,tapestrysecurity@shell.sourceforge.net:/home/project-web/tapestrysecurity/htdocs/maven_repo</url>
 		</repository>
 	</distributionManagement>
 
@@ -75,7 +75,7 @@
 		<extensions>
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ssh-external</artifactId>
+				<artifactId>wagon-ssh</artifactId>
 			</extension>
 	    </extensions>
 	</build>
