@@ -13,6 +13,8 @@ import org.gagauz.tapestry.security.api.AccessChecker;
  */
 public class IfAuthorized extends AbstractConditional {
 
+    private static final String[] EMPTY_ARRAY = new String[0];
+
     /** The roles. */
     @Parameter(defaultPrefix = BindingConstants.LITERAL)
     private String[] roles;
@@ -24,7 +26,7 @@ public class IfAuthorized extends AbstractConditional {
     @Override
     protected boolean test() {
         try {
-            securityChecker.check(roles);
+            securityChecker.check(null == roles ? EMPTY_ARRAY : roles);
         } catch (AccessDeniedException e) {
             return false;
         }
