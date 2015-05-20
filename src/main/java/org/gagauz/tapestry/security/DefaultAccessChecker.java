@@ -13,18 +13,18 @@ public class DefaultAccessChecker implements AccessChecker {
 
     /**
      * Checks if is current user has roles.
-     * 
-     * @param needRoles
-     *            the need roles
+     *
+     * @param needRoles the need roles
      */
     @Override
     public void check(String[] needRoles) throws AccessDeniedException {
-        if (null != needRoles) {
-            SecurityUser securityUser = applicationStateManager.getIfExists(SecurityUser.class);
-            if (null == securityUser || !securityUser.checkRoles(needRoles)) {
+        SecurityUser securityUser = applicationStateManager.getIfExists(SecurityUser.class);
+        if (null != securityUser) {
+            if (null != needRoles && !securityUser.checkRoles(needRoles)) {
                 throw new AccessDeniedException(needRoles);
             }
         }
 
     }
+
 }

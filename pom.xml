@@ -6,7 +6,7 @@
 	<artifactId>tapestry-security</artifactId>
 	<version>3.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>Another one Tapestry 5 Security Library</name>
+	<name>Tapestry 5 Security Library</name>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.tapestry</groupId>
@@ -28,8 +28,13 @@
 	</dependencies>
 
 	<distributionManagement>
+		<site>
+			<id>sf</id>
+			<name>SourceForge</name>
+			<url>scpexe://xl0e,tapestrysecurity@shell.sourceforge.net:/home/project-web/tapestrysecurity/htdocs</url>
+		</site>
 		<repository>
-			<id>sourceforge</id>
+			<id>sf</id>
 			<name>SourceForge</name>
 			<url>scp://xl0e,tapestrysecurity@shell.sourceforge.net:/home/project-web/tapestrysecurity/htdocs/maven_repo</url>
 		</repository>
@@ -70,14 +75,31 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
+				<version>3.4</version>
+				<dependencies>
+					<dependency><!-- add support for ssh/scp -->
+						<groupId>org.apache.maven.wagon</groupId>
+						<artifactId>wagon-ssh-external</artifactId>
+						<version>2.8</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.8.1</version>
+				<configuration>
+					<uniqueVersion>false</uniqueVersion>
+				</configuration>
+				<dependencies>
+					<dependency><!-- add support for ssh/scp -->
+						<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh</artifactId>
+						<version>2.8</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
-		<extensions>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ssh</artifactId>
-			</extension>
-	    </extensions>
 	</build>
 
 	<reporting />
@@ -89,10 +111,6 @@
 		<repository>
 			<id>apache-staging</id>
 			<url>https://repository.apache.org/content/groups/staging/</url>
-		</repository>
-		<repository>
-			<id>sf</id>
-			<url>http://tapestrysecurity.sourceforge.net/maven_repo/</url>
 		</repository>
 	</repositories>
 
