@@ -1,7 +1,6 @@
 package org.gagauz.tapestry.security;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -10,6 +9,7 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import java.security.spec.KeySpec;
+import java.util.ArrayList;
 import java.util.Collection;
 
 // TODO: Auto-generated Javadoc
@@ -17,19 +17,19 @@ import java.util.Collection;
  * The Class SecurityEncryptor.
  */
 public class SecurityEncryptor {
-    
+
     /** The Constant JOIN_STR. */
-    private static final char JOIN_STR = '\0';
-    
+    private static final String JOIN_STR = "\0";
+
     /** The Constant ALGORITHM. */
     private static final String ALGORITHM = "AES";
-    
+
     /** The encrypt. */
     private final Cipher encrypt;
-    
+
     /** The decrypt. */
     private final Cipher decrypt;
-    
+
     /** The Constant CH. */
     private static final String CH = "latin1";
 
@@ -93,8 +93,7 @@ public class SecurityEncryptor {
      * @return the string
      */
     public String encryptArray(Collection<String> strings) {
-        String joined = StringUtils.join(strings, JOIN_STR);
-        return encrypt(joined);
+        return encryptArray(new ArrayList<String>(strings).toArray(new String[strings.size()]));
     }
 
     /**
@@ -104,8 +103,14 @@ public class SecurityEncryptor {
      * @return the string
      */
     public String encryptArray(String... strings) {
-        String joined = StringUtils.join(strings, JOIN_STR);
-        return encrypt(joined);
+        if (strings.length == 0) {
+            return encrypt("");
+        }
+        StringBuilder sb = new StringBuilder(strings[0]);
+        for (int i = 1; i < strings.length; i++) {
+            sb.append(JOIN_STR).append(strings[i]);
+        }
+        return encrypt(sb.toString());
     }
 
     /**
@@ -116,7 +121,7 @@ public class SecurityEncryptor {
      */
     public String[] decryptArray(String string) {
         string = decrypt(string);
-        return StringUtils.split(string, JOIN_STR);
+        return string.split(JOIN_STR);
     }
 
 }
