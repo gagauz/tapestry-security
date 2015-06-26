@@ -1,39 +1,17 @@
 package org.gagauz.tapestry.security;
 
-// TODO: Auto-generated Javadoc
-/**
- * The Class AccessDeniedException.
- */
+import org.gagauz.tapestry.security.api.AccessAttribute;
+
 public class AccessDeniedException extends RuntimeException {
 
-    /** The need roles. */
-    private String[] needRoles;
+    private AccessAttribute accessAttribute;
 
-    /**
-     * Instantiates a new security exception.
-     *
-     * @param needRoles the need roles
-     */
-    public AccessDeniedException(String[] needRoles) {
-        this.needRoles = needRoles;
+    public AccessDeniedException(AccessAttribute accessAttribute) {
+        this.accessAttribute = accessAttribute;
     }
 
-    /**
-     * Gets the need roles.
-     *
-     * @return the need roles
-     */
-    public String[] getNeedRoles() {
-        return needRoles;
-    }
-
-    /**
-     * Sets the need roles.
-     *
-     * @param needRoles the new need roles
-     */
-    public void setNeedRoles(String[] needRoles) {
-        this.needRoles = needRoles;
+    public AccessAttribute getNeedRoles() {
+        return accessAttribute;
     }
 
 }

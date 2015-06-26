@@ -7,7 +7,6 @@ import org.apache.tapestry5.ioc.annotations.Local;
 import org.apache.tapestry5.services.ComponentEventRequestFilter;
 import org.apache.tapestry5.services.PageRenderRequestFilter;
 import org.apache.tapestry5.services.transform.ComponentClassTransformWorker2;
-import org.gagauz.tapestry.security.api.AccessChecker;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -16,9 +15,9 @@ import org.gagauz.tapestry.security.api.AccessChecker;
 public class SecurityModule {
 
     public static void bind(ServiceBinder binder) {
-        binder.bind(AccessChecker.class, DefaultAccessChecker.class);
         binder.bind(AccessDeniedExceptionInterceptorFilter.class).withId("SecurityExceptionRequestFilter");
         binder.bind(AuthService.class).withId("AuthService");
+        binder.bind(AccessAttributeChecker.class);
     }
 
     /**

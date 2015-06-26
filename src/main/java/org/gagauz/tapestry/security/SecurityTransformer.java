@@ -1,5 +1,7 @@
 package org.gagauz.tapestry.security;
 
+import org.gagauz.tapestry.security.api.AccessAttribute;
+
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.model.MutableComponentModel;
@@ -12,7 +14,6 @@ import org.apache.tapestry5.runtime.ComponentEvent;
 import org.apache.tapestry5.services.ComponentEventHandler;
 import org.apache.tapestry5.services.transform.ComponentClassTransformWorker2;
 import org.apache.tapestry5.services.transform.TransformationSupport;
-import org.gagauz.tapestry.security.api.AccessChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,45 +24,42 @@ import java.util.List;
  */
 public class SecurityTransformer implements ComponentClassTransformWorker2 {
 
-    /** The logger. */
-    protected static Logger logger = LoggerFactory.getLogger(SecurityTransformer.class);
+    protected static Logger LOG = LoggerFactory.getLogger(SecurityTransformer.class);
 
-    /** The security checker. */
+    //Contributed 
     @Inject
-    private AccessChecker accessChecker;
+    private AccessAttributeChecker invocationCheckerResolver;
 
-    /**
-     * Gets the security advice.
-     *
-     * @param securedMethod the secured method
-     * @param needRoles the need roles
-     * @return the security advice
-     */
-    private MethodAdvice getSecurityAdvice(final PlasticMethod securedMethod, final String[] needRoles) {
+    private MethodAdvice getSecurityAdvice(final PlasticMethod securedMethod, final List<AccessAttribute> methodAttribute) {
         return new MethodAdvice() {
-
             @Override
             public void advise(MethodInvocation invocation) {
-                accessChecker.check(needRoles);
+                for (AccessAttribute attribute : methodAttribute) {
+                    invocationCheckerResolver.checkAttribute(attribute);
+                }
             }
         };
     }
 
     @Override
     public void transform(PlasticClass plasticClass, TransformationSupport support, MutableComponentModel model) {
-        final Secured annotation = plasticClass.getAnnotation(Secured.class);
-        if (null != annotation) {
+        final List<AccessAttribute> attributes = invocationCheckerResolver.getAccessAttribute(plasticClass);
+
+        if (!attributes.isEmpty()) {
             support.addEventHandler(EventConstants.ACTIVATE, 0, "SecurityTransformer activate event handler", new ComponentEventHandler() {
                 @Override
                 public void handleEvent(Component instance, ComponentEvent event) {
-                    accessChecker.check(annotation.value());
+                    for (AccessAttribute attribute : attributes) {
+                        invocationCheckerResolver.checkAttribute(attribute);
+                    }
                 }
             });
         }
-        List<PlasticMethod> securedMethods = plasticClass.getMethodsWithAnnotation(Secured.class);
-        for (PlasticMethod securedMethod : securedMethods) {
-            final Secured methodAnnotation = securedMethod.getAnnotation(Secured.class);
-            securedMethod.addAdvice(getSecurityAdvice(securedMethod, methodAnnotation.value()));
+        for (PlasticMethod securedMethod : plasticClass.getMethods()) {
+            final List<AccessAttribute> methodAttribute = invocationCheckerResolver.getAccessAttribute(plasticClass);
+            if (!methodAttribute.isEmpty()) {
+                securedMethod.addAdvice(getSecurityAdvice(securedMethod, methodAttribute));
+            }
         }
     }
 }

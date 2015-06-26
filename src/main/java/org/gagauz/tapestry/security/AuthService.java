@@ -36,7 +36,8 @@ public class AuthService {
 
         if (null != newUser) {
             SecurityUser oldUser = applicationStateManager.getIfExists(newUser.getClass());
-            applicationStateManager.set(SecurityUser.class, newUser);
+            Class clz = newUser.getClass();
+            applicationStateManager.set(clz, newUser);
             result = new LoginSuccessResult(newUser);
             result.setOldUser(oldUser);
         } else {
