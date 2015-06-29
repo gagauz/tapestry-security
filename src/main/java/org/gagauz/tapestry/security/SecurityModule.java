@@ -17,7 +17,8 @@ public class SecurityModule {
     public static void bind(ServiceBinder binder) {
         binder.bind(AccessDeniedExceptionInterceptorFilter.class).withId("SecurityExceptionRequestFilter");
         binder.bind(AuthService.class).withId("AuthService");
-        binder.bind(AccessAttributeChecker.class);
+        binder.bind(AccessAttributesCreatorContainer.class);
+        binder.bind(AccessAttributesCheckerContainer.class);
     }
 
     /**

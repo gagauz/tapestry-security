@@ -1,10 +1,11 @@
 package org.gagauz.tapestry.security.components;
 
-import org.gagauz.tapestry.security.AccessAttributeChecker;
-
+import org.apache.tapestry5.annotations.InjectContainer;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.corelib.base.AbstractConditional;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.runtime.Component;
+import org.gagauz.tapestry.security.AccessAttributesCheckerContainer;
 import org.gagauz.tapestry.security.AccessDeniedException;
 import org.gagauz.tapestry.security.api.TextAccessAttribute;
 
@@ -18,13 +19,16 @@ public class IfAuthorized extends AbstractConditional {
     @Parameter
     private String attributes;
 
+    @InjectContainer
+    private Component container;
+
     @Inject
-    private AccessAttributeChecker invocationCheckerList;
+    private AccessAttributesCheckerContainer accessAttributesValidator;
 
     @Override
     protected boolean test() {
         try {
-            invocationCheckerList.checkAttribute(new TextAccessAttribute(attributes));
+            accessAttributesValidator.checkAttribute(new TextAccessAttribute(container, attributes));
         } catch (AccessDeniedException e) {
             return false;
         }

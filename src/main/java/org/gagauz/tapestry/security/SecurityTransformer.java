@@ -1,7 +1,5 @@
 package org.gagauz.tapestry.security;
 
-import org.gagauz.tapestry.security.api.AccessAttribute;
-
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.model.MutableComponentModel;
@@ -14,6 +12,7 @@ import org.apache.tapestry5.runtime.ComponentEvent;
 import org.apache.tapestry5.services.ComponentEventHandler;
 import org.apache.tapestry5.services.transform.ComponentClassTransformWorker2;
 import org.apache.tapestry5.services.transform.TransformationSupport;
+import org.gagauz.tapestry.security.api.AccessAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,37 +27,36 @@ public class SecurityTransformer implements ComponentClassTransformWorker2 {
 
     //Contributed 
     @Inject
-    private AccessAttributeChecker invocationCheckerResolver;
+    private AccessAttributesCreatorContainer accessAttributesCreatorContainer;
 
-    private MethodAdvice getSecurityAdvice(final PlasticMethod securedMethod, final List<AccessAttribute> methodAttribute) {
-        return new MethodAdvice() {
-            @Override
-            public void advise(MethodInvocation invocation) {
-                for (AccessAttribute attribute : methodAttribute) {
-                    invocationCheckerResolver.checkAttribute(attribute);
-                }
-            }
-        };
-    }
+    @Inject
+    private AccessAttributesCheckerContainer accessAttributesCheckerContainer;
 
     @Override
     public void transform(PlasticClass plasticClass, TransformationSupport support, MutableComponentModel model) {
-        final List<AccessAttribute> attributes = invocationCheckerResolver.getAccessAttribute(plasticClass);
+        final List<AccessAttribute> attributes = accessAttributesCreatorContainer.createAccessAttributes(plasticClass, null);
 
         if (!attributes.isEmpty()) {
             support.addEventHandler(EventConstants.ACTIVATE, 0, "SecurityTransformer activate event handler", new ComponentEventHandler() {
                 @Override
                 public void handleEvent(Component instance, ComponentEvent event) {
                     for (AccessAttribute attribute : attributes) {
-                        invocationCheckerResolver.checkAttribute(attribute);
+                        accessAttributesCheckerContainer.checkAttribute(attribute);
                     }
                 }
             });
         }
-        for (PlasticMethod securedMethod : plasticClass.getMethods()) {
-            final List<AccessAttribute> methodAttribute = invocationCheckerResolver.getAccessAttribute(plasticClass);
-            if (!methodAttribute.isEmpty()) {
-                securedMethod.addAdvice(getSecurityAdvice(securedMethod, methodAttribute));
+        for (PlasticMethod plasticMethod : plasticClass.getMethods()) {
+            final List<AccessAttribute> methodAttributes = accessAttributesCreatorContainer.createAccessAttributes(plasticClass, plasticMethod);
+            if (!methodAttributes.isEmpty()) {
+                plasticMethod.addAdvice(new MethodAdvice() {
+                    @Override
+                    public void advise(MethodInvocation invocation) {
+                        for (AccessAttribute attribute : methodAttributes) {
+                            accessAttributesCheckerContainer.checkAttribute(attribute);
+                        }
+                    }
+                });
             }
         }
     }
