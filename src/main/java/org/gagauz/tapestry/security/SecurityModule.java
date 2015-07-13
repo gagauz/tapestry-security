@@ -15,41 +15,26 @@ import org.apache.tapestry5.services.transform.ComponentClassTransformWorker2;
 public class SecurityModule {
 
     public static void bind(ServiceBinder binder) {
-        binder.bind(AccessDeniedExceptionInterceptorFilter.class).withId("SecurityExceptionRequestFilter");
-        binder.bind(AuthService.class).withId("AuthService");
-        binder.bind(AccessAttributesCreatorContainer.class);
-        binder.bind(AccessAttributesCheckerContainer.class);
+        binder.bind(AccessDeniedExceptionInterceptorFilter.class).withId(
+                "AccessDeniedExceptionInterceptorFilter");
+        binder.bind(AuthenticationService.class).withId("AuthService");
     }
 
-    /**
-     * Contribute component class transform worker2.
-     *
-     * @param configuration the configuration
-     */
     @Contribute(ComponentClassTransformWorker2.class)
-    public void contributeComponentClassTransformWorker2(OrderedConfiguration<ComponentClassTransformWorker2> configuration) {
+    public void contributeComponentClassTransformWorker2(
+            OrderedConfiguration<ComponentClassTransformWorker2> configuration) {
         configuration.addInstance("SecurityTransformer", SecurityTransformer.class);
     }
 
-    /**
-     * Contribute component event request handler.
-     *
-     * @param configuration the configuration
-     * @param filter the filter
-     */
-    public void contributeComponentEventRequestHandler(OrderedConfiguration<ComponentEventRequestFilter> configuration,
-                                                       @Local AccessDeniedExceptionInterceptorFilter filter) {
-        configuration.add("SecurityExceptionFilterComponent", filter, "after:*");
+    public void contributeComponentEventRequestHandler(
+            OrderedConfiguration<ComponentEventRequestFilter> configuration,
+            @Local AccessDeniedExceptionInterceptorFilter filter) {
+        configuration.add("AccessDeniedExceptionInterceptorFilterComponent", filter, "after:*");
     }
 
-    /**
-     * Contribute page render request handler.
-     *
-     * @param configuration the configuration
-     * @param filter the filter
-     */
-    public void contributePageRenderRequestHandler(OrderedConfiguration<PageRenderRequestFilter> configuration,
-                                                   @Local AccessDeniedExceptionInterceptorFilter filter) {
-        configuration.add("SecurityExceptionFilterPage", filter, "after:*");
+    public void contributePageRenderRequestHandler(
+            OrderedConfiguration<PageRenderRequestFilter> configuration,
+            @Local AccessDeniedExceptionInterceptorFilter filter) {
+        configuration.add("AccessDeniedExceptionInterceptorFilterPage", filter, "after:*");
     }
 }

@@ -13,10 +13,10 @@ import org.apache.tapestry5.services.ComponentEventHandler;
 import org.apache.tapestry5.services.transform.ComponentClassTransformWorker2;
 import org.apache.tapestry5.services.transform.TransformationSupport;
 import org.gagauz.tapestry.security.api.AccessAttribute;
+import org.gagauz.tapestry.security.api.AccessAttributeChecker;
+import org.gagauz.tapestry.security.api.AccessAttributeExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 /**
  * The Class SecurityTransformer.
@@ -25,36 +25,36 @@ public class SecurityTransformer implements ComponentClassTransformWorker2 {
 
     protected static Logger LOG = LoggerFactory.getLogger(SecurityTransformer.class);
 
-    //Contributed 
     @Inject
-    private AccessAttributesCreatorContainer accessAttributesCreatorContainer;
+    private AccessAttributeExtractor accessAttributeExtractor;
 
     @Inject
-    private AccessAttributesCheckerContainer accessAttributesCheckerContainer;
+    private AccessAttributeChecker accessAttributesChecker;
 
     @Override
-    public void transform(PlasticClass plasticClass, TransformationSupport support, MutableComponentModel model) {
-        final List<AccessAttribute> attributes = accessAttributesCreatorContainer.createAccessAttributes(plasticClass, null);
+    public void transform(PlasticClass plasticClass, TransformationSupport support,
+            MutableComponentModel model) {
+        final AccessAttribute attribute = accessAttributeExtractor.extract(plasticClass);
 
-        if (!attributes.isEmpty()) {
-            support.addEventHandler(EventConstants.ACTIVATE, 0, "SecurityTransformer activate event handler", new ComponentEventHandler() {
-                @Override
-                public void handleEvent(Component instance, ComponentEvent event) {
-                    for (AccessAttribute attribute : attributes) {
-                        accessAttributesCheckerContainer.checkAttribute(attribute);
-                    }
-                }
-            });
+        if (null != attribute) {
+            support.addEventHandler(EventConstants.ACTIVATE, 0,
+                    "SecurityTransformer activate event handler", new ComponentEventHandler() {
+                        @Override
+                        public void handleEvent(Component instance, ComponentEvent event) {
+                            accessAttributesChecker.check(attribute);
+                        }
+                    });
         }
         for (PlasticMethod plasticMethod : plasticClass.getMethods()) {
-            final List<AccessAttribute> methodAttributes = accessAttributesCreatorContainer.createAccessAttributes(plasticClass, plasticMethod);
-            if (!methodAttributes.isEmpty()) {
+            final AccessAttribute attribute1 = accessAttributeExtractor.extract(plasticClass,
+                    plasticMethod);
+
+            if (null != attribute1) {
                 plasticMethod.addAdvice(new MethodAdvice() {
                     @Override
                     public void advise(MethodInvocation invocation) {
-                        for (AccessAttribute attribute : methodAttributes) {
-                            accessAttributesCheckerContainer.checkAttribute(attribute);
-                        }
+                        accessAttributesChecker.check(attribute1);
+                        invocation.proceed();
                     }
                 });
             }

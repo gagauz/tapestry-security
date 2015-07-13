@@ -1,6 +1,6 @@
 package org.gagauz.tapestry.security;
 
-import org.gagauz.tapestry.security.api.SecurityUser;
+import org.gagauz.tapestry.security.api.User;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -9,17 +9,17 @@ import org.gagauz.tapestry.security.api.SecurityUser;
 public abstract class LoginResult {
 
     /** The user. */
-    private SecurityUser user;
+    private User user;
     
     /** The old user. */
-    private SecurityUser oldUser;
+    private User oldUser;
 
     /**
      * Instantiates a new login result.
      *
      * @param user the user
      */
-    public LoginResult(SecurityUser user) {
+    public LoginResult(User user) {
         this.user = user;
     }
 
@@ -35,7 +35,7 @@ public abstract class LoginResult {
      *
      * @return the user
      */
-    public SecurityUser getUser() {
+    public User getUser() {
         return user;
     }
 
@@ -45,7 +45,7 @@ public abstract class LoginResult {
      * @param user the user
      * @return the user
      */
-    public void getUser(SecurityUser user) {
+    public void getUser(User user) {
         this.user = user;
     }
 
@@ -54,7 +54,7 @@ public abstract class LoginResult {
      *
      * @return the old user
      */
-    public SecurityUser getOldUser() {
+    public User getOldUser() {
         return oldUser;
     }
 
@@ -63,7 +63,7 @@ public abstract class LoginResult {
      *
      * @param oldUser the new old user
      */
-    public void setOldUser(SecurityUser oldUser) {
+    public void setOldUser(User oldUser) {
         this.oldUser = oldUser;
     }
 }

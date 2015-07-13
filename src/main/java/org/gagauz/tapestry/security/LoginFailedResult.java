@@ -1,20 +1,14 @@
 package org.gagauz.tapestry.security;
 
+import org.gagauz.tapestry.security.api.Credentials;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class LoginFailedResult.
  */
-public class LoginFailedResult extends LoginResult {
+public class LoginFailedResult {
 
-    /**
-     * Instantiates a new login failed result.
-     */
-    public LoginFailedResult() {
-        super(null);
-    }
-
-    @Override
-    public boolean isSuccess() {
-        return false;
+    public LoginFailedResult(Credentials credentials) {
+        // TODO Auto-generated constructor stub
     }
 }

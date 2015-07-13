@@ -1,6 +1,6 @@
 package org.gagauz.tapestry.security;
 
-import org.gagauz.tapestry.security.api.SecurityUser;
+import org.gagauz.tapestry.security.api.User;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -13,7 +13,7 @@ public class LoginSuccessResult extends LoginResult {
      *
      * @param user the user
      */
-    public LoginSuccessResult(SecurityUser user) {
+    public LoginSuccessResult(User user) {
         super(user);
     }
 
