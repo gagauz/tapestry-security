@@ -7,10 +7,6 @@ import org.gagauz.tapestry.security.AccessDeniedException;
 import org.gagauz.tapestry.security.api.AccessAttribute;
 import org.gagauz.tapestry.security.api.AccessAttributeChecker;
 
-// TODO: Auto-generated Javadoc
-/**
- * The Class IfAuthorized.
- */
 public class IfAuthorized extends AbstractConditional {
 
     /** The roles. */
@@ -22,8 +18,11 @@ public class IfAuthorized extends AbstractConditional {
 
     @Override
     protected boolean test() {
+        AccessAttribute accessAttribute = null == attribute
+                ? AccessAttribute.EMPTY_ATTRIBUTE
+                : attribute;
         try {
-            accessAttributeChecker.check(attribute);
+            accessAttributeChecker.check(accessAttribute);
         } catch (AccessDeniedException e) {
             return false;
         }
